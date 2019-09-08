@@ -6,23 +6,39 @@ export interface TodosFilterParams {
 }
 
 function TodosFilterComponent({ onFilter }: TodosFilterParams) {
-  const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const [description, setDescription] = React.useState('')
+  const [doneFilter, setDoneFilter] = React.useState(TodoStatusFilter.ALL)
+
+  const handleChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(event.currentTarget.value)
+  }
+
+  const handleChangeDoneFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDoneFilter(event.currentTarget.value as TodoStatusFilter)
+  }
+
+  const handleFilter = () => {
     if (onFilter) {
       onFilter({
-        description: event.currentTarget.value
+        description,
+        done: doneFilter
       })
     }
   }
 
   return (
     <div>
-      <label>
-        Description:
-        <input onChange={handleInput} />
-      </label>
-      <input type='radio' name='doneFilter' value={TodoStatusFilter.DONE} /> Done
-      <input type='radio' name='doneFilter' value={TodoStatusFilter.NOT_DONE} /> Not Done
-      <input type='radio' name='doneFilter' value={TodoStatusFilter.ALL} defaultChecked /> All
+      <div>
+        <label>
+          Description:
+          <input value={description} onChange={handleChangeDescription} />
+        </label>
+        <input type='radio' name='doneFilter' value={TodoStatusFilter.DONE} checked={doneFilter === TodoStatusFilter.DONE} onChange={handleChangeDoneFilter} /> Done
+        <input type='radio' name='doneFilter' value={TodoStatusFilter.NOT_DONE} checked={doneFilter === TodoStatusFilter.NOT_DONE} onChange={handleChangeDoneFilter} /> Not Done
+        <input type='radio' name='doneFilter' value={TodoStatusFilter.ALL} checked={doneFilter === TodoStatusFilter.ALL} onChange={handleChangeDoneFilter} /> All
+      </div>
+      <button type='button' onClick={handleFilter}>Filter</button>
+      <pre>{JSON.stringify({ description, doneFilter }, null, 2)}</pre>
     </div>
   )
 }

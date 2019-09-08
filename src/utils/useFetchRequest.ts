@@ -12,7 +12,7 @@ export const INITIAL_REQUEST_STATE = {
   error: null
 }
 
-export function useFetchRequest<T>(fetcher: () => Promise<T>): RequestState<T> {
+export function useFetchRequest<T>(fetcher: (params?: any) => Promise<T>, params?: any): RequestState<T> {
   const [requestState, setRequestState] = useState<RequestState<T>>(INITIAL_REQUEST_STATE)
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export function useFetchRequest<T>(fetcher: () => Promise<T>): RequestState<T> {
         error: null
       })
 
-      const result = await fetcher()
+      const result = await fetcher(params)
 
       if (componentIsMounted) {
         setRequestState({
@@ -41,7 +41,7 @@ export function useFetchRequest<T>(fetcher: () => Promise<T>): RequestState<T> {
     return () => {
       componentIsMounted = false
     }
-  }, [fetcher])
+  }, [fetcher, params])
 
   return requestState
 }

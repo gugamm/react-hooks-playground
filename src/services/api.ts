@@ -1,4 +1,4 @@
-import { Todo } from '../types'
+import { Todo, TodosFilters, TodoStatusFilter } from '../types'
 import { delay } from '../utils/asyncHelpers'
 import uuid from 'uuid/v4'
 
@@ -6,7 +6,7 @@ export interface TodosDb {
   [K : string]: Todo
 }
 
-const DEFAULT_API_DELAY = 2000
+const DEFAULT_API_DELAY = 10000
 
 let todosDb: TodosDb = {
   '0': {
@@ -18,6 +18,11 @@ let todosDb: TodosDb = {
     description: 'Hey There',
     done: false,
     id: '1'
+  },
+  '2': {
+    description: 'Done Todo',
+    done: true,
+    id: '2'
   }
 }
 
@@ -30,6 +35,22 @@ export const createTodo = async (todo: Omit<Todo, 'id'>): Promise<Todo> => {
     [id]: newTodo
   }
   return newTodo
+}
+
+export const getFilteredTodos = async (filter: TodosFilters): Promise<Todo[]> => {
+  await delay(DEFAULT_API_DELAY)
+  const allTodos = Object.values(todosDb)
+  return allTodos.filter(todo => {
+    if (filter.done === TodoStatusFilter.ALL) {
+      return todo.description.includes(filter.description)
+    }
+
+    if (filter.done === TodoStatusFilter.NOT_DONE) {
+      return !todo.done && todo.description.includes(filter.description)
+    }
+
+    return todo.done && todo.description.includes(filter.description)
+  })
 }
 
 export const updateTodo = async (todoId: string, updateParams: Partial<Omit<Todo, 'id'>>): Promise<Todo> => {

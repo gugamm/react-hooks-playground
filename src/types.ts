@@ -11,5 +11,7 @@ export enum TodoStatusFilter {
 }
 
 export interface TodosFilters {
-  description: string
+  description: string,
+  done: TodoStatusFilter
 }
+
