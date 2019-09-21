@@ -6,7 +6,7 @@ export interface TodosDb {
   [K : string]: Todo
 }
 
-const DEFAULT_API_DELAY = 10000
+const DEFAULT_API_DELAY = 6000
 
 let todosDb: TodosDb = {
   '0': {
@@ -38,8 +38,10 @@ export const createTodo = async (todo: Omit<Todo, 'id'>): Promise<Todo> => {
 }
 
 export const getFilteredTodos = async (filter: TodosFilters): Promise<Todo[]> => {
+  console.log('GETTING FILTERED TODO...')
   await delay(DEFAULT_API_DELAY)
   const allTodos = Object.values(todosDb)
+  console.log('DONE')
   return allTodos.filter(todo => {
     if (filter.done === TodoStatusFilter.ALL) {
       return todo.description.includes(filter.description)
