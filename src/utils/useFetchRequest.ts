@@ -37,17 +37,6 @@ const mergeRequestState = <TData, TParams>(nextRequestState?: Partial<RequestSta
   }
 }
 
-
-type SetStateMethod = React.Dispatch<React.SetStateAction<any>>
-export interface FetchDataParams {
-  params: any,
-  setRequestState: SetStateMethod,
-  fetcher: (params: any) => Promise<any>,
-  isComponentMounted: boolean,
-  onCompleted?: (data: any) => Promise<void>,
-  onError?: (err: any) => Promise<void>
-}
-
 export function useFetchRequest<TData, TFetchParams>(fetcher: (params: TFetchParams) => Promise<TData>, options: UseFetchRequestOptions<TData, TFetchParams> = { params: undefined as any }): UseFetchRequestResult<TData, TFetchParams> {
   const defaultFetchParams = options.params
   const isComponentMountedRef = useRef(false)
